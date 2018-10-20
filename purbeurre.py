@@ -2,7 +2,7 @@ import json
 import requests
 from colorama import Back, Fore, init
 
-from configuration import read_categories, url_search
+from configuration import read_categories, url_categories
 
 init(autoreset=True)
 
@@ -64,8 +64,7 @@ def display_ls_categories():
             print("\nVous avez choisi la catégorie :", category)
             print("-" * 80)
 
-            url = url_search(category, 1)
-            display_ls_products(url)
+            display_ls_products(category)
 
         else:
             print(Back.RED + "\nErreur:" + Back.RESET +
@@ -73,8 +72,8 @@ def display_ls_categories():
             display_ls_categories()
 
 
-def display_ls_products(url):
-    url = url
+def display_ls_products(category, page_number=1):
+    url = url_categories(category, page_number)
     r = requests.get(url).json()
     # print(r.headers["content-type"])
 
@@ -94,7 +93,10 @@ def display_ls_products(url):
         # print("-" * 79)
         product_num += 1
     print("-" * 79)
-    print("40 - Previous page")
+    if num_page > 1:
+        print("40 - Previous page")
+    else:
+        print("")
     print("50 - Next page")
     print("60 - Home page")
 
@@ -119,16 +121,21 @@ def display_ls_products(url):
             # display_ls_products(url)
 
         elif product_input == 50:
-
-            display_ls_products(url)
+            display_ls_products(category, page_number + 1)
+        
+        elif product_input == 40:
+            if num_page > 1:
+                display_ls_products(category, page_number - 1)
+            else:
+                display_ls_products(category, page_number=1)
 
         else:
             print(Back.RED + "\nErreur:" + Back.RESET +
                   " Veuillez saisir un nombre entre 1 et {}\n".format(len(page['products'])))
-            display_ls_categories()
+            display_ls_products(category, page_number)
 
 
-def main():
+def main(): 
     header()
     home()
 

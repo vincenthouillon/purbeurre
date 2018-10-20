@@ -76,10 +76,14 @@ def insert_categories():
     conn.close()
 
 
-def url_search(category, page):
+def url_categories(category, page=1):
     url = ("https://fr.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0={}&sort_by=unique_scans_n&page_size=20&axis_x=energy&axis_y=products_n&action=display&page={}&json=1").format(
         category, page)
     return url
+
+
+def url_product(code):
+    pass
 
 
 def main():
