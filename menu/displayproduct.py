@@ -10,7 +10,12 @@ init(autoreset=True)
 
 
 def display_product(code, category):
-
+    """Displays the 'product sheet'
+    
+    Arguments:
+        code {str} -- Code product
+        category {str} -- Category
+    """
     category = category
     url = url_product(code)
     r = requests.get(url).json()

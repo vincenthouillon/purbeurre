@@ -14,6 +14,11 @@ init(autoreset=True)
 
 
 def header(msg_error=""):
+    """Displays the program header
+    
+    Keyword Arguments:
+        msg_error {str} -- [description] (default: {""})
+    """
     os.system("cls")
     header = " PurBeurre "
     print(Back.YELLOW + (" " * 80))
@@ -25,6 +30,8 @@ def header(msg_error=""):
         print("\n")
 
 def home():
+    """Display program home
+    """
     print("1 - Quel aliment souhaitez-vous remplacer ?")
     print("2 - Retouver mes aliments substitués.")
     print("q - Quitter")

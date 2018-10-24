@@ -9,7 +9,14 @@ from purbeurre import header, home
 
 
 def display_ls_products(category, page_number=1):
-
+    """Display the list of products
+    
+    Arguments:
+        category {str} -- Category
+    
+    Keyword Arguments:
+        page_number {int} -- Page number (default: {1})
+    """
     url = url_categories(category, page_number)
     r = requests.get(url).json()
     products = json.dumps(r)

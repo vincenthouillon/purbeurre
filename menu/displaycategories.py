@@ -5,7 +5,8 @@ from purbeurre import header, home
 
 
 def display_ls_categories():
-
+    """Displays the categories of the json file
+    """
     categories = read_categories()["ls_categories"]
 
     print("Liste des catégories disponibles :")

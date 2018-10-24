@@ -1,6 +1,7 @@
 import json
 import random
 
+import mysql.connector
 import requests
 
 from lib.configuration import cleaner, url_alt_product, url_product
@@ -9,10 +10,14 @@ from menu import displayproduct as dp
 from menu import displayproductslist as dpl
 from purbeurre import header, home
 
-import mysql.connector
 
 def display_alter_product(code, category):
+    """Search alternative product
     
+    Arguments:
+        code {str} -- Code product
+        category {str} -- Category
+    """
     category = category
     url = url_product(code)
     r = requests.get(url).json()
