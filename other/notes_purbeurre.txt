@@ -1,0 +1,123 @@
+https://fr.openfoodfacts.org/api/v0/produit/3142952734019.json
+
+:::::::::::::::::: URL_SEARCH ::::::::::::::::::::
+
+https://fr.openfoodfacts.org/cgi/search.pl?action=process
+&tagtype_0=categories
+&tag_contains_0=contains
+&tag_0=d%C3%A9jeuner
+&sort_by=unique_scans_n
+&page_size=20
+&axis_x=energy
+&axis_y=products_n
+&action=display
+&json=1
+
+
+https://fr.openfoodfacts.org/cgi/search.pl?action=process
+&tagtype_0=categories
+&tag_contains_0=contains
+&tag_0=pizza
+&sort_by=unique_scans_n
+&page_size=20
+&axis_x=energy
+&axis_y=products_n&
+action=display
+
+https://fr.openfoodfacts.org/cgi/search.pl?action=process
+&search_terms=pizza
+&tagtype_0=nutrition_grades
+&tag_contains_0=contains
+&tag_0=a
+&sort_by=unique_scans_n
+&page_size=20
+&axis_x=energy
+&axis_y=products_n
+&action=display
+&json=1
+
+
+https://fr.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=Plats%20pr%C3%A9par%C3%A9s&sort_by=unique_scans_n&page_size=20&axis_x=energy&axis_y=products_n&action=display
+
+https://fr.openfoodfacts.org/cgi/search.pl?action=process
+
+&search_terms=pizza
+
+&tagtype_0=categories
+&tag_contains_0=contains
+&tag_0=Plats%20pr%C3%A9pa%C3%A9s
+
+&tagtype_1=nutrition_grades
+&tag_contains_1=contains
+&tag_1=a
+
+&sort_by=unique_scans_n
+&page_size=20
+&axis_x=energy&axis_y=products_n
+&action=display
+&page=2
+
+:::::::::::::::::: ARCHIVE CODE ::::::::::::::::::::
+
+
+
+
+Recherche produit avec Nutriscore :
+
+https://fr.openfoodfacts.org/cgi/search.pl?action=process&search_terms=P�te � tartiner au cacao et noisettes&tagtype_0=nutrition_grades&tag_contains_0=contains&tag_0=a&sort_by=unique_scans_n&page_size=20&axis_x=energy&axis_y=products_n&action=display
+
+:::::::::::::::::::::: TEST :::::::::::::::::::::::::
+# print(product['product']['generic_name_fr'])
+
+        # cat = product['product']['categories'].split(",")
+        
+        # number = 0
+        # for x in cat:
+        #     url = url_alt_product(keyword, x, "a")
+        #     r = requests.get(url).json()
+        #     page_alter = json.dumps(r)
+        #     alter = json.loads(page_alter)
+        #     number += 1
+        #     if alter["count"] > 0:
+        #         print(number, "-", x, ":", alter["count"])
+        #     else :
+        #         print("Not found")
+
+:::::::::::::::::: Read & Write categories OpenFoodFacts :::::::::::::::::::::
+def get_off_categories(self):
+        """Recovering categories on OpenFoodFacts
+
+        Returns:
+            json -- all categories
+        """
+        print("Please wait, login to 'https://fr.openfoodfacts.org/categories.json'")
+        url = "https://fr.openfoodfacts.org/categories.json"
+        response = requests.get(url).json()
+        print("Successful connection\n")
+
+        counter = 0
+        for _ in response["tags"]:
+            progress(counter, response['count'],
+                    f"Recover all categories : {response['count']}")
+            counter += 1
+        print("")
+
+        with open("categories_off.json", "w", encoding="utf8") as f:
+            f.write(json.dumps(response, ensure_ascii=False))
+
+
+    def insert_off_categories(self, json_file):
+        with open(json_file, encoding="utf-8") as f:
+            off_categories = json.load(f)
+
+        cnx = self.sql_connect()
+        cur = cnx.cursor()
+        
+        for value in off_categories['tags']:
+            cur.execute("""
+                INSERT IGNORE INTO Categories(id, name, url, products)
+                VALUES(%s, %s, %s, %s);
+            """, (value['id'], value['name'], value['url'], value['products']))
+
+        cnx.commit()
+        cnx.close()
