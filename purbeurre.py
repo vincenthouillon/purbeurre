@@ -1,31 +1,29 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import json
 import os
 
 from colorama import Back, Fore, init
 
-from lib.configuration import (cleaner, read_categories, url_alt_product,
-                               url_categories, url_product)
-from menu import displaycategories as dc
+from config import configuration as conf
+from config import display as dis
 
 init(autoreset=True)
 
 
-def header(msg_error=""):
+def header(msg=""):
     """Displays the program header
     
     Keyword Arguments:
-        msg_error {str} -- [description] (default: {""})
+        msg {str} -- Message (default: {""})
     """
     os.system("cls")
     header = " PurBeurre "
     print(Back.YELLOW + (" " * 80))
     print(Back.YELLOW + Fore.BLACK + header.center(80, " "))
     print(Back.YELLOW + (" " * 80))
-    if msg_error:
-        print(Back.RED + msg_error.center(80, ' ') + "\n" + Back.RESET)
+    if msg:
+        print(Back.RED + msg.center(80, ' ') + "\n" + Back.RESET)
     else:
         print("\n")
 
@@ -39,13 +37,17 @@ def home():
 
     if home_input == "1":
         header()
-        dc.display_ls_categories()
+        dis.display_ls_categories()
+
+    # :::::::::::::::::::::::::: DISPLAY RECORD ::::::::::::::::::::::::::
     elif home_input == "2":
-        print("\nComing soon!")
-        exit()
+        header()
+        dis.display_all_records()
+
     elif home_input.lower() == "q":
         print("\nAu revoir et à bientôt...")
         exit()
+
     else:
         error = ("Veuillez saisir un nombre entre 1 et 2 ou 'q' pour quitter")
         header(error)
