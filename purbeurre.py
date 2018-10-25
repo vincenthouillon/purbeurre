@@ -28,7 +28,7 @@ def header(msg=""):
         print("\n")
 
 def home():
-    """Display program home
+    """Program Home Screen Poster
     """
     print("1 - Quel aliment souhaitez-vous remplacer ?")
     print("2 - Retouver mes aliments substitués.")
@@ -39,7 +39,6 @@ def home():
         header()
         dis.display_ls_categories()
 
-    # :::::::::::::::::::::::::: DISPLAY RECORD ::::::::::::::::::::::::::
     elif home_input == "2":
         header()
         dis.display_all_records()

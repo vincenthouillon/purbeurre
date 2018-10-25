@@ -4,7 +4,6 @@ import mysql.connector
 import requests
 
 from config import configuration as conf
-from config import progressbar
 
 
 class Dbase:
@@ -33,7 +32,7 @@ class Dbase:
             CREATE TABLE IF NOT EXISTS Records (
                 id INT NOT NULL AUTO_INCREMENT,
                 code VARCHAR(140) NOT NULL,
-                name VARCHAR(140) NOT NULL,
+                product_name VARCHAR(140) NOT NULL,
                 quantity VARCHAR(80),
                 brand VARCHAR(140),
                 store VARCHAR(140),
@@ -46,7 +45,7 @@ class Dbase:
                 DEFAULT CHARSET = utf8 COLLATE utf8_unicode_ci;
         """)
         cursor.execute("""
-            CREATE UNIQUE INDEX UK_code ON Records (code)
+            CREATE UNIQUE INDEX UK_code ON Records (code);
         """)
 
     @staticmethod
@@ -63,7 +62,7 @@ class Dbase:
         cur = cnx.cursor()
         cur.execute("USE purbeurre")
         cur.execute("""
-            INSERT INTO Records(code, name, quantity, brand, store,
+            INSERT INTO Records(code, product_name, quantity, brand, store,
             nutriscore, url, category)
             VALUES(%s, %s, %s, %s, %s, %s, %s, %s); """,
                     (
@@ -79,62 +78,8 @@ class Dbase:
         cnx.commit()
         cnx.close()
 
-    # def create_tbl_off_categories(self):
-    #     cnx = self.sql_connect()
-    #     cur = cnx.cursor()
-    #     cur.execute("USE purbeurre;")
-    #     cur.execute("""
-    #         CREATE TABLE IF NOT EXISTS Categories (
-    #             id VARCHAR(140) NOT NULL,
-    #             name VARCHAR(140) NOT NULL,
-    #             url VARCHAR(140) NOT NULL,
-    #             products  INT(6) NOT NULL,
-    #             PRIMARY KEY(id)
-    #             )
-    #             ENGINE=InnoDB
-    #             DEFAULT CHARSET = utf8 COLLATE utf8_unicode_ci;
-    #     """)
-
-    # def get_off_categories(self):
-    #     """Recovering categories on OpenFoodFacts
-
-    #     Returns:
-    #         json -- all categories
-    #     """
-    #     print("Please wait, login to 'https://fr.openfoodfacts.org/categories.json'")
-    #     url = "https://fr.openfoodfacts.org/categories.json"
-    #     response = requests.get(url).json()
-    #     print("Successful connection\n")
-
-    #     counter = 0
-    #     for _ in response["tags"]:
-    #         progress(counter, response['count'],
-    #                  f"Recover all categories : {response['count']}")
-    #         counter += 1
-    #     print("")
-
-    #     with open("categories_off.json", "w", encoding="utf8") as f:
-    #         f.write(json.dumps(response, ensure_ascii=False))
-
-    def insert_off_categories(self, json_file):
-        with open(json_file, encoding="utf-8") as f:
-            off_categories = json.load(f)
-
-        cnx = self.sql_connect()
-        cur = cnx.cursor()
-
-        for value in off_categories['tags']:
-            cur.execute("""
-                INSERT IGNORE INTO Categories(id, name, url, products)
-                VALUES(%s, %s, %s, %s);
-            """, (value['id'], value['name'], value['url'], value['products']))
-
-        cnx.commit()
-        cnx.close()
-
 def main():
     from configuration import url_product
-    from progressbar import progress
     db = Dbase
     db.create_tbl_recording()
 

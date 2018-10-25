@@ -1,8 +1,8 @@
 {
     "dbase":{
-        "user":"root",
+        "user":"pbadmin",
         "host":"localhost",
-        "passwd":"541im4",
+        "passwd":"pbadmin",
         "database":"purbeurre"
     }
 }
